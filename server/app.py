@@ -37,7 +37,7 @@ app_ui = ui.page_sidebar(
                 ui.input_action_button("alert", "Alert Me"),
             ),
         ),
-        ui.output_text_verbatim("txt"),
+        ui.output_plot("historic"),
     ),
 )
 
