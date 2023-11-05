@@ -25,7 +25,7 @@ app_ui = ui.page_sidebar(
                ui.input_text("m", "Filter", placeholder="Country Name"),
                ui.input_select("y", "Convert to", default_choices, selected="Vietnam"))),
     ui.card(
-        ui.div({"style": "text-align: center;"},
+        ui.div({"style": "text-align: center; background-color:#458f69; color:#FFFFFF"},
                ui.markdown("# Current¢")),
         ui.output_plot("historic")
     )
