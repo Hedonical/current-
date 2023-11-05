@@ -4,9 +4,6 @@ from country_dict import countries
 from exchange_rate import scrape_currency_conversion
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from forex_python.converter import CurrencyCodes
-
-c = CurrencyCodes()
 
 all_countries = countries()
 
@@ -62,11 +59,9 @@ def server(input, output, session):
         plt.xticks(rotation=40)
 
         plt.xlabel('Date')
-        plt.ylabel(c.get_symbol(all_countries.all[input.y(
-        )].curr))  # NEED TO ADD CURRENCY SYMBOL
+        plt.ylabel(all_countries.all[input.y(
+        )].curr)
 
-        plt.tight_layout()
-        plt.show()
         return fig
 
     # update the Your currency input options based on text
@@ -101,13 +96,39 @@ def server(input, output, session):
 
     @reactive.Effect
     @reactive.event(input.advice)
-    def _():
-        m = ui.modal(
-            "Right now is a BAD TIME to buy.",
-            title="Should you purchase?",
-            easy_close=True,
-            footer=(ui.modal_button("Close")),
-        )
+    async def _():
+        output = await scrape_currency_conversion(all_countries.all[input.x()].curr,
+                                                  all_countries.all[input.y(
+                                                  )].curr,
+                                                  input.am())
+        std_div = output["Price"].std()
+
+        out_mean = output["Price"].mean()
+
+        current_price = output["Price"][output["Date"].idxmax()]
+
+        if current_price > out_mean + std_div:
+            m = ui.modal(
+                "🟢 Conversion rates are above average, you will be receiving more resulting currency",
+                title="Should you purchase?",
+                easy_close=True,
+                footer=(ui.modal_button("Close")),
+            )
+        elif current_price < out_mean - std_div:
+            m = ui.modal(
+                "🔴 Conversion rates are below average, you will be receiving less resulting currency",
+                title="Should you purchase?",
+                easy_close=True,
+                footer=(ui.modal_button("Close")),
+            )
+        else:
+            m = ui.modal(
+                "🟡 Conversion rates are about average, you will be receiving average resulting currency",
+                title="Should you purchase?",
+                easy_close=True,
+                footer=(ui.modal_button("Close")),
+            )
+
         ui.modal_show(m)
 
     @reactive.Effect
