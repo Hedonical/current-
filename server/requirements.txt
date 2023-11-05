@@ -1,7 +1,7 @@
-requests
-numpy
-matplotlib
-forex-python
-emoji-country-flag
 beautifulsoup4
 pandas
+lxml
+numpy
+matplotlib
+emoji-country-flag
+
