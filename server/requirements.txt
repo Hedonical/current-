@@ -4,4 +4,5 @@ lxml
 numpy
 matplotlib
 emoji-country-flag
+forex_python
 
