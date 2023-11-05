@@ -1,5 +1,4 @@
 from shiny import App, render, ui, reactive
-import forex_python as fr
 import flag
 from country_dict import countries
 
