@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=League Spartan');
+
+#screen {
+    height:100vh
+    
+}
+
+#header {
+    display:flex;
+    background-color:#458f69;
+    font-family:"League Spartan", sans-serif;
+    font-weight: 100;
+}
