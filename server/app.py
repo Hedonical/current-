@@ -99,5 +99,27 @@ def server(input, output, session):
             choices=filtered_input,
         )
 
+    @reactive.Effect
+    @reactive.event(input.advice)
+    def _():
+        m = ui.modal(
+            "Right now is a BAD TIME to buy.",
+            title="Should you purchase?",
+            easy_close=True,
+            footer=(ui.modal_button("Close")),
+        )
+        ui.modal_show(m)
+
+    @reactive.Effect
+    @reactive.event(input.alert)
+    def _():
+        m = ui.modal(
+            ui.input_text("number", "Phone Number"),
+            title="Enter your phone number for text alerts: ",
+            easy_close=True,
+            footer=(ui.modal_button("Submit"), ui.modal_button("Close")),
+        )
+        ui.modal_show(m)
+
 
 app = App(app_ui, server, debug=True)
