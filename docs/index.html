@@ -4,6 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shiny App</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script> <!-- newcode -->
+    <script type="module">
+      async function startPyodideApp() {
+          // Load Pyodide
+          const pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/" });
+
+          // Load additional Pyodide packages
+          await pyodide.loadPackage('micropip');
+          await pyodide.runPythonAsync(`
+              import micropip
+              await micropip.install('pyodide-http')
+          `);
+
+          // Fetch and run your app's Python code
+          const response = await fetch("app.py");  // Adjust the path to your app file
+          const appCode = await response.text();
+          pyodide.runPython(appCode);
+      }
+
+      startPyodideApp();
+  </script>
     <script
       src="./shinylive/load-shinylive-sw.js"
       type="module"
