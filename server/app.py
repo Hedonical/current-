@@ -4,6 +4,7 @@ from country_dict import countries
 from exchange_rate import scrape_currency_conversion
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import plotly.express as px
 
 all_countries = countries()
 
@@ -43,24 +44,36 @@ def server(input, output, session):
 
     @output
     @render.plot
+    # async def historic():
+
+    #     # calculate the currency conversion
+    #     output = await scrape_currency_conversion(all_countries.all[input.x()].curr,
+    #                                               all_countries.all[input.y(
+    #                                               )].curr,
+    #                                               input.am())
+
+    #     output = output.sort_values(by='Date')
+
+    #     fig, ax = plt.subplots()
+    #     ax.plot(output["Date"], output["Price"])
+    #     ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+    #     plt.xticks(rotation=40)
+
+    #     plt.xlabel('Date')
+    #     plt.ylabel(all_countries.all[input.y(
+    #     )].curr)
+
+    #     return fig
     async def historic():
-
         # calculate the currency conversion
-        output = await scrape_currency_conversion(all_countries.all[input.x()].curr,
-                                                  all_countries.all[input.y(
-                                                  )].curr,
-                                                  input.am())
+        output_data = await scrape_currency_conversion(all_countries.all[input.x()].curr,
+                                                      all_countries.all[input.y()].curr,
+                                                      input.am())
 
-        output = output.sort_values(by='Date')
+        output_data = output_data.sort_values(by='Date')
 
-        fig, ax = plt.subplots()
-        ax.plot(output["Date"], output["Price"])
-        ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
-        plt.xticks(rotation=40)
-
-        plt.xlabel('Date')
-        plt.ylabel(all_countries.all[input.y(
-        )].curr)
+        fig = px.line(output_data, x="Date", y="Price", labels={'Price': all_countries.all[input.y()].curr})
+        fig.update_layout(xaxis_title='Date', yaxis_title=all_countries.all[input.y()].curr)
 
         return fig
 
